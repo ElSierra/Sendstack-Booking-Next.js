@@ -11,7 +11,7 @@ export default function IconButton({
   ariaLabel: string;
   onClick: (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    idx?: number
+    idx?: string
   ) => void;
 }) {
   return (
