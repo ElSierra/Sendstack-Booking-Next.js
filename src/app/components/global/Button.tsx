@@ -7,7 +7,7 @@ export default function Button({
 }: {
   children: ReactNode;
   className: string;
-  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, idx?:number) => void;
 }) {
   return (
     <button
