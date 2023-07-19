@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import formStep from "./local/formStep";
+import locationList from "./local/locationList";
 import { getSendStack } from "./api/sendStackApi";
 
 export const store = configureStore({
-  reducer: { formStep, [getSendStack.reducerPath]: getSendStack.reducer },
+  reducer: { formStep, [getSendStack.reducerPath]: getSendStack.reducer, locationList },
   devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(getSendStack.middleware),

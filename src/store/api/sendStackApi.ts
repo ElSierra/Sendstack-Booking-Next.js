@@ -25,11 +25,11 @@ export const getSendStack = createApi({
       query: () => "/wallet/balance",
       providesTags: ["balance"],
     }),
-    getDeliveryLocation: builder.query<Location, null>({
+    getDeliveryLocation: builder.query<any, null>({
       query: () => "/locations",
       providesTags: ["location"],
     }),
   }),
 });
 
-export const { useGetBalanceQuery } = getSendStack;
+export const { useGetBalanceQuery, useGetDeliveryLocationQuery } = getSendStack;
