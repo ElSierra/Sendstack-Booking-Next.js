@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import formStep from "./local/formStep";
-import { getUserInfo } from "./api/getUserInfo";
+import { getSendStack } from "./api/sendStackApi";
 
 export const store = configureStore({
-  reducer: { formStep, [getUserInfo.reducerPath]: getUserInfo.reducer },
+  reducer: { formStep, [getSendStack.reducerPath]: getSendStack.reducer },
   devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(getUserInfo.middleware),
+    getDefaultMiddleware().concat(getSendStack.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
