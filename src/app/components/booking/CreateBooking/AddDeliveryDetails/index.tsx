@@ -6,15 +6,24 @@ import { Add, Back } from "iconsax-react";
 import { useEffect, useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import validate from "validator";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setStep } from "@/store/local/formStep";
-import { DeliveryDetails, Location, emptyDeliveryDetails } from "@/types";
+import {
+  DeliveryDetails,
+  Drops,
+  Location,
+  emptyDeliveryDetails,
+} from "@/types";
 import { emptyOrderList } from "@/app/util/deliveryList";
 import TransitionWrapper from "@/app/components/global/Transition";
+import Modal from "../Modal";
+import { openModal } from "@/store/local/modal";
+import { addLocationDetails } from "@/store/local/deliveryDetails";
+import { deliveryDetails } from "@/model/deliveryDetails";
 
 export default function AddDeliveryDetails() {
-  const [locationIdx, setLocationIdx] = useState(["0"]);
   const dispatch = useAppDispatch();
+  const fulldeliveryData = useAppSelector((state) => state.deliveryDetails);
 
   const [transition, setTransition] = useState(false);
   const [backColor, setBackColor] = useState("black");
@@ -107,38 +116,20 @@ export default function AddDeliveryDetails() {
     setDeliveryList((prev) => prev.filter((prev) => prev.id !== idx));
     e.preventDefault();
   };
-  useEffect(() => {
-    setTransition(true);
-    console.log("rendered");
-  }, []);
+
   const [inValidList, setInValidList] = useState<
     { id: string; valid: boolean }[]
   >([]);
 
   const listInvalid = useMemo(() => inValidList, [inValidList]);
+  console.log(
+    "🚀 ~ file: index.tsx:120 ~ AddDeliveryDetails ~ listInvalid:",
+    listInvalid
+  );
   const canAdvance = () => {
     const validList = [];
 
     for (let i in deliveryList) {
-      // if (deliveryList[i].address.value.length < 3) {
-      //   validList.push({name:'address', valid: false})
-      // }
-      // if(deliveryList[i].address.value.length>3){
-      //   validList.push({name:'address', valid: true})
-      // }
-      // if (deliveryList[i].recipientName.value.length < 3) {
-      //   validList.push({name:'recipientName', valid: false})
-      // }
-      // if(deliveryList[i].recipientName.value.length>3){
-      //   validList.push({name:'recipientName', valid: true})
-      // }
-      // if(deliveryList[i].locationCode.value.length>1){
-      //   validList.push({name:'locationCode', valid: true})
-      // }
-      // if(deliveryList[i].locationCode.value.length<1){
-      //   validList.push({name:'locationCode', valid: false})
-      // }
-
       if (
         deliveryList[i].address.value.length < 3 ||
         deliveryList[i].recipientName.value.length < 3 ||
@@ -161,61 +152,95 @@ export default function AddDeliveryDetails() {
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
+    event.preventDefault();
     console.log("🐶", canAdvance());
     setInValidList(canAdvance());
+    if (!canAdvance().some((item) => item.valid)) {
+      dispatch(openModal({ text: "Complete the form to progress" }));
+      return;
+    }
+    const drops: Drops[] = [];
+
+    for (let i in deliveryList) {
+      drops.push(
+        new deliveryDetails(
+          deliveryList[i].id,
+          deliveryList[i].locationCode,
+          deliveryList[i].address,
+          deliveryList[i].recipientName,
+          deliveryList[i].recipientNumber,
+          deliveryList[i].altRecipientNumber
+        )
+      );
+    }
+    console.log(
+      "🚀 ~ file: index.tsx:161 ~ AddDeliveryDetails ~ drops:",
+      drops
+    );
+    dispatch(addLocationDetails(drops));
+    if (fulldeliveryData.pickup) {
+      dispatch(setStep("2"));
+    }
     event.preventDefault();
   };
-
+  useEffect(() => {
+    setTransition(true);
+    console.log("rendered");
+  }, []);
   return (
-    <TransitionWrapper show={transition}>
-      <form>
-        <div className="w-full h-full flex flex-col pb-32">
-          <Back
-            size="32"
-            onClick={() => {
-              setTransition(false);
-              dispatch(setStep("0"));
-            }}
-            color={backColor}
-            onMouseOver={() => {
-              setBackColor("#00000078");
-            }}
-            onMouseOut={() => {
-              setBackColor("black");
-            }}
-            className="cursor-pointer"
-            variant="Bulk"
-          />
-          <h1 className="mb-4 font-bold">Drop Locations</h1>
-          <p className="text-xs text-blue-950">
-            * Multiple Drop Locations can be selected
-          </p>
-          {deliveryList.map((deliveryDetail, idx) => (
-            <DropComponent
-              index={idx.toString()}
-              onChange={modifyDeliveryList}
-              inValid={listInvalid}
-              onChangeLocation={modifyDeliveryListLocation}
-              deliveryDetail={deliveryDetail}
-              key={deliveryDetail.id}
-              idx={deliveryDetail.id}
-              onClickDelete={(
-                e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-              ) => handleDelete(e, deliveryDetail.id)}
+    <>
+      <Modal />
+      <TransitionWrapper show={transition}>
+        <form>
+          <div className="w-full h-full flex flex-col pb-32">
+            <Back
+              size="32"
+              onClick={() => {
+                setTransition(false);
+                dispatch(setStep("0"));
+              }}
+              color={backColor}
+              onMouseOver={() => {
+                setBackColor("#00000078");
+              }}
+              onMouseOut={() => {
+                setBackColor("black");
+              }}
+              className="cursor-pointer"
+              variant="Bulk"
             />
-          ))}
-          <IconButton
-            onClick={(e) => handleAddNew(e, uuidv4())}
-            ariaLabel="add"
-            className="bg-black w-fit py-0 px-0 overflow-hidden mt-2"
-          >
-            <Add size="30" color="#FFFFFF" variant="Linear" />
-          </IconButton>
-          <Button onClick={handleClick} className="mt-6">
-            Continue
-          </Button>
-        </div>
-      </form>
-    </TransitionWrapper>
+            <h1 className="mb-4 font-bold">Drop Locations</h1>
+            <p className="text-xs text-blue-950">
+              * Multiple Drop Locations can be selected
+            </p>
+            {deliveryList.map((deliveryDetail, idx) => (
+              <DropComponent
+                index={idx.toString()}
+                onChange={modifyDeliveryList}
+                inValid={listInvalid}
+                onChangeLocation={modifyDeliveryListLocation}
+                deliveryDetail={deliveryDetail}
+                key={deliveryDetail.id}
+                idx={deliveryDetail.id}
+                onClickDelete={(
+                  e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                ) => handleDelete(e, deliveryDetail.id)}
+              />
+            ))}
+            <IconButton
+              onClick={(e) => handleAddNew(e, uuidv4())}
+              ariaLabel="add"
+              className="bg-black w-fit py-0 px-0 overflow-hidden mt-2"
+            >
+              <Add size="30" color="#FFFFFF" variant="Linear" />
+            </IconButton>
+
+            <Button onClick={handleClick} className="mt-6">
+              Continue
+            </Button>
+          </div>
+        </form>
+      </TransitionWrapper>
+    </>
   );
 }

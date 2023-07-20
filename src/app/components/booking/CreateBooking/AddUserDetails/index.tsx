@@ -140,14 +140,14 @@ export default function AddUserDetails() {
   }, [locationListFromData]);
 
   const formIsValid =
-    !!(userDetails.address.value.length > 3) &&
-    validate.isMobilePhone(userDetails.altPickupNumber.value, ["en-NG"]) &&
-    validate.isMobilePhone(userDetails.pickupNumber.value, ["en-NG"]) &&
+    !!(userDetails?.address?.value?.length > 3) &&
+    validate.isMobilePhone(userDetails?.altPickupNumber?.value, ["en-NG"]) &&
+    validate.isMobilePhone(userDetails?.pickupNumber?.value, ["en-NG"]) &&
     !!(userDetails.pickupName.value.length > 3) &&
     !!(
-      Number(userDetails.kg.value) > 0 && Number(userDetails.kg.value) <= 10
+      Number(userDetails?.kg?.value) > 0 && Number(userDetails?.kg?.value) <= 10
     ) &&
-    userDetails.locationCode.value.length > 0;
+    userDetails?.locationCode?.value.length > 0;
 
   const [refreshColor, setColor] = useState("red");
   return (

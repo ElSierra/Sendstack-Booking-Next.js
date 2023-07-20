@@ -2,11 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import formStep from "./local/formStep";
 import locationList from "./local/locationList";
 import deliveryDetails from "./local/deliveryDetails";
+import modal from "./local/modal";
 import { getSendStack } from "./api/sendStackApi";
 
 export const store = configureStore({
   reducer: {
     formStep,
+    modal,
     [getSendStack.reducerPath]: getSendStack.reducer,
     locationList,
     deliveryDetails,

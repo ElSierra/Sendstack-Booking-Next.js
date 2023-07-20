@@ -26,6 +26,13 @@ const deliveryDetails = createSlice({
         localStorage.setItem("_ssUD", JSON.stringify(action.payload));
       }
     },
+    addLocationDetails: (state, action: PayloadAction<Drops[]>) => {
+      state.drops = action.payload;
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("_ssUD");
+        localStorage.setItem("_ssUD", JSON.stringify(state));
+      }
+    },
     removeUserDetails: (state) => {
       state.pickup = null;
       if (typeof window !== "undefined") {
@@ -36,4 +43,5 @@ const deliveryDetails = createSlice({
 });
 
 export default deliveryDetails.reducer;
-export const { addUserDetails, removeUserDetails } = deliveryDetails.actions;
+export const { addUserDetails, removeUserDetails, addLocationDetails } =
+  deliveryDetails.actions;
