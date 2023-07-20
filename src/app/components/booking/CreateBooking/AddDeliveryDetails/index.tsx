@@ -8,20 +8,58 @@ import { v4 as uuidv4 } from "uuid";
 import { Transition } from "@headlessui/react";
 import { useAppDispatch } from "@/store/hooks";
 import { setStep } from "@/store/local/formStep";
+import { DeliveryDetails, Location, emptyDeliveryDetails } from "@/types";
+import { emptyOrderList } from "@/app/util/deliveryList";
+import TransitionWrapper from "@/app/components/global/Transition";
 
 export default function AddDeliveryDetails() {
   const [locationIdx, setLocationIdx] = useState(["0"]);
   const dispatch = useAppDispatch();
-  const handleClick = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+
+  const [transition, setTransition] = useState(false);
+  const [backColor, setBackColor] = useState("black");
+  const [deliveryList, setDeliveryList] = useState<DeliveryDetails[]>([
+    emptyDeliveryDetails,
+  ]);
+
+  const modifyDeliveryList = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: string
   ) => {
-    event.preventDefault();
+    const specificDeliveryIndex = deliveryList.findIndex(
+      (delivery) => delivery.id === id
+    );
+
+    setDeliveryList((prev) => {
+      const targetName = e.target.name;
+      //@ts-ignore
+      prev[specificDeliveryIndex][targetName] = {
+        valid: true,
+        value: e.target.value,
+      };
+      return [...prev];
+    });
+  };
+
+  const modifyDeliveryListLocation = (e: Location, id: string) => {
+    const specificDeliveryIndex = deliveryList.findIndex(
+      (delivery) => delivery.id === id
+    );
+
+    setDeliveryList((prev) => {
+      prev[specificDeliveryIndex].locationCode = {
+        valid: true,
+        value: e.locationCode,
+      };
+      return [...prev];
+    });
   };
   const handleAddNew = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     idx: string
   ) => {
-    setLocationIdx((prev) => [...prev, idx]);
+    setDeliveryList((prev) => [...prev, emptyOrderList(uuidv4())]);
+    console.log(deliveryList);
     e.preventDefault();
   };
 
@@ -29,26 +67,22 @@ export default function AddDeliveryDetails() {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     idx: string
   ) => {
-    setLocationIdx((prev) => prev.filter((prev) => prev !== idx));
+    setDeliveryList((prev) => prev.filter((prev) => prev.id !== idx));
     e.preventDefault();
   };
-  const [transition, setTransition] = useState(false);
-  const [backColor, setBackColor] = useState("black");
-
   useEffect(() => {
     setTransition(true);
-    console.log('rendered')
+    console.log("rendered");
   }, []);
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    console.log(deliveryList);
+    event.preventDefault();
+  };
+
   return (
-    <Transition
-      show={transition}
-      enter="transition-opacity ease-linear duration-300"
-      enterFrom="opacity-0"
-      enterTo="opacity-100"
-      leave="transition-opacity ease-linear duration-300"
-      leaveFrom="opacity-100"
-      leaveTo="opacity-0"
-    >
+    <TransitionWrapper show={transition}>
       <form>
         <div className="w-full h-full flex flex-col pb-32">
           <Back
@@ -71,13 +105,16 @@ export default function AddDeliveryDetails() {
           <p className="text-xs text-blue-950">
             * Multiple Drop Locations can be selected
           </p>
-          {locationIdx.map((idx) => (
+          {deliveryList.map((deliveryDetail) => (
             <DropComponent
-              key={idx}
-              idx={idx}
-              onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-                handleDelete(e, idx)
-              }
+              onChange={modifyDeliveryList}
+              onChangeLocation = {modifyDeliveryListLocation}
+              deliveryDetail={deliveryDetail}
+              key={deliveryDetail.id}
+              idx={deliveryDetail.id}
+              onClickDelete={(
+                e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+              ) => handleDelete(e, deliveryDetail.id)}
             />
           ))}
           <IconButton
@@ -92,6 +129,6 @@ export default function AddDeliveryDetails() {
           </Button>
         </div>
       </form>
-    </Transition>
+    </TransitionWrapper>
   );
 }

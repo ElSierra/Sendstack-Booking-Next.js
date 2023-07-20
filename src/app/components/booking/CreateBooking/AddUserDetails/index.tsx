@@ -1,26 +1,71 @@
 import Button from "@/app/components/global/Button";
-
 import React, { useEffect, useState } from "react";
 import DatePicker from "../DatePicker";
 import TextArea from "../TextArea";
 import Input from "../Input";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setStep } from "@/store/local/formStep";
 import { Transition } from "@headlessui/react";
 import validate from "validator";
 import { Location } from "@/types";
 import "react-phone-number-input/style.css";
 import PhoneInput from "../phoneInput";
-import LocationDropDown from "../DropDownMenu";
+import LocationDropDown from "../LocationPicker";
 import { UserDetails, emptyUserDetails } from "@/types";
+import {
+  addUserDetails,
+  removeUserDetails,
+} from "@/store/local/deliveryDetails";
+import { UserDetailsClass } from "@/model/userDetails";
+import { RefreshRightSquare } from "iconsax-react";
 
 export default function AddUserDetails() {
   const dispatch = useAppDispatch();
+  const userDetailState = useAppSelector(
+    (state) => state.deliveryDetails.pickup
+  );
+  const locationList = useAppSelector((state) => state.locationList);
+
+  const locationListFromData = locationList?.data.filter(
+    (location) => location.locationCode === userDetailState?.locationCode
+  );
+
+  const [selected, setSelected] = useState<Location>(() => {
+    return { name: "Pick a location", isAvailable: false, locationCode: "0" };
+  });
+
+  const userDetailsData = (): UserDetails => {
+    if (userDetailState) {
+      return new UserDetailsClass(
+        userDetailState.address,
+        userDetailState.locationCode,
+        userDetailState.pickupName,
+        userDetailState.pickupNumber,
+        userDetailState.altPickupNumber,
+        new Date(userDetailState.pickupDate || ""),
+        userDetailState.note,
+        userDetailState.kg
+      );
+    }
+    return emptyUserDetails;
+  };
   const [transition, setTransition] = useState(false);
-  const [kg, setKg] = useState({ value: "0", valid: false });
-  const [userDetails, setUserDetails] = useState<UserDetails>(emptyUserDetails);
+
+  const [userDetails, setUserDetails] = useState<UserDetails>(userDetailsData);
   const handleClick = () => {
     dispatch(setStep("1"));
+    dispatch(
+      addUserDetails({
+        address: userDetails.address.value,
+        locationCode: userDetails.locationCode.value,
+        pickupName: userDetails.pickupName.value,
+        pickupNumber: userDetails.pickupNumber.value,
+        altPickupNumber: userDetails.altPickupNumber.value,
+        pickupDate: userDetails.pickupDate.value,
+        note: userDetails.note.value,
+        kg: userDetails.kg.value,
+      })
+    );
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length > 0) {
@@ -62,14 +107,23 @@ export default function AddUserDetails() {
       return;
     }
     if (Number(e.target.value) > 10) {
-      setKg({ value: e.target.value, valid: false });
+      setUserDetails({
+        ...userDetails,
+        [e.target.name]: { value: e.target.value, valid: false },
+      });
       return;
     }
     if (Number(e.target.value) <= 0) {
-      setKg({ value: e.target.value, valid: false });
+      setUserDetails({
+        ...userDetails,
+        [e.target.name]: { value: e.target.value, valid: false },
+      });
       return;
     }
-    setKg({ value: e.target.value, valid: true });
+    setUserDetails({
+      ...userDetails,
+      [e.target.name]: { value: e.target.value, valid: true },
+    });
   };
 
   const handleDate = (e: any) => {
@@ -80,16 +134,22 @@ export default function AddUserDetails() {
   };
   useEffect(() => {
     setTransition(true);
-  }, []);
+    if (locationListFromData.length > 0) {
+      setSelected(locationListFromData[0]);
+    }
+  }, [locationListFromData]);
 
   const formIsValid =
     !!(userDetails.address.value.length > 3) &&
     validate.isMobilePhone(userDetails.altPickupNumber.value, ["en-NG"]) &&
     validate.isMobilePhone(userDetails.pickupNumber.value, ["en-NG"]) &&
     !!(userDetails.pickupName.value.length > 3) &&
-    !!(Number(kg.value) > 0 && Number(kg.value) <= 10) &&
+    !!(
+      Number(userDetails.kg.value) > 0 && Number(userDetails.kg.value) <= 10
+    ) &&
     userDetails.locationCode.value.length > 0;
 
+  const [refreshColor, setColor] = useState("red");
   return (
     <Transition
       show={transition}
@@ -102,8 +162,26 @@ export default function AddUserDetails() {
     >
       <form>
         <div className="w-full h-full flex flex-col">
-          <h1 className=" font-bold">Send Item</h1>
-          <p className="text-xs">Input your details </p>
+          <div className="flex justify-between items-center">
+            <h1 className=" font-bold">Send Item</h1>{" "}
+            <RefreshRightSquare
+              size="32"
+              onMouseOver={() => {
+                setColor("black");
+              }}
+              onMouseLeave={() => {
+                setColor("red");
+              }}
+              className="cursor-pointer"
+              onClick={() => {
+                dispatch(removeUserDetails());
+                setUserDetails(emptyUserDetails);
+              }}
+              color={refreshColor}
+              variant="Bulk"
+            />
+          </div>
+          <p className="text-xs">Complete all [<span className="text-red-800">*</span>] </p>
           <hr className="my-2" />
           <Input
             errorMsg="Please fill out this field"
@@ -123,14 +201,15 @@ export default function AddUserDetails() {
           <Input
             errorMsg="10kg is the maximum allowed"
             label="Weight(Kg)"
-            valid={kg.valid}
+            valid={userDetails.kg.valid}
             props={{
               min: 1,
+              name: "kg",
               max: 10,
               maxLength: 2,
               type: "number",
               onChange: kgValidator,
-              value: kg.value.toString(),
+              value: userDetails.kg.value,
               placeholder: "1",
             }}
           />
@@ -187,7 +266,11 @@ export default function AddUserDetails() {
               placeholder: "Please be prompt",
             }}
           />
-          <LocationDropDown handleLocation={handleLocation} />
+          <LocationDropDown
+            handleLocation={handleLocation}
+            selected={selected}
+            setSelected={setSelected}
+          />
           <DatePicker
             label="Pickup Date"
             handleDate={handleDate}

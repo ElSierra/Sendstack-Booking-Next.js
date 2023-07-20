@@ -10,8 +10,12 @@ function classNames(...classes: any) {
 
 export default function LocationDropDown({
   handleLocation,
+  setSelected,
+  selected,
 }: {
   handleLocation: (e: Location) => void;
+  setSelected: (e: any) => void;
+  selected: Location;
 }) {
   const locationList = useAppSelector((state) => state.locationList);
   console.log(
@@ -20,9 +24,7 @@ export default function LocationDropDown({
   );
 
   const [locations, setLocations] = useState<Location[]>([]);
-  const [selected, setSelected] = useState<Location>(() => {
-    return { name: "Pick a location", isAvailable: false, locationCode: "0" };
-  });
+
   useEffect(() => {
     if (locationList.data.length > 0) {
       console.log(
@@ -41,10 +43,10 @@ export default function LocationDropDown({
     <Listbox value={selected} onChange={handleChange}>
       {({ open }) => (
         <>
-          <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">
-            Location
+          <Listbox.Label className="block tracking-wide text-gray-700 text-xs font-bold mb-[0.2rem]">
+            Location <span className="text-red-800">*</span>
           </Listbox.Label>
-          <div className="relative mt-2">
+          <div className="relative mt-0.5">
             <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
               <span className="flex items-center">
                 <span className="ml-3 block truncate">{selected?.name}</span>

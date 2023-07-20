@@ -19,7 +19,7 @@ export default function Input({
         className="block tracking-wide text-gray-700 text-xs font-bold mb-[0.2rem]"
         htmlFor={label}
       >
-        {label}
+        {label}<span className="text-red-800">*</span>
       </label>
       <input
         name={label}

@@ -18,7 +18,7 @@ export default function PhoneInput({
         className="block tracking-wide text-gray-700 text-xs font-bold mb-[0.2rem]"
         htmlFor={label}
       >
-        {label}
+        {label}<span className="text-red-800">*</span>
       </label>
       <div
         className={`flex w-full items-center overflow-hidden  ${
@@ -34,6 +34,7 @@ export default function PhoneInput({
         />
         <input
           name={label}
+          type="tel"
           className="appearance-none px-1 w-full py-2 h-full focus:outline-none  bg-gray-200  focus:bg-white"
           {...props}
         />
