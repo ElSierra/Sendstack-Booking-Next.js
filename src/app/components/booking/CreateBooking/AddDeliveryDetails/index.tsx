@@ -3,9 +3,9 @@ import IconButton from "@/app/components/global/IconButton";
 
 import DropComponent from "../DropComponent";
 import { Add, Back } from "iconsax-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Transition } from "@headlessui/react";
+import validate from "validator";
 import { useAppDispatch } from "@/store/hooks";
 import { setStep } from "@/store/local/formStep";
 import { DeliveryDetails, Location, emptyDeliveryDetails } from "@/types";
@@ -26,19 +26,56 @@ export default function AddDeliveryDetails() {
     e: React.ChangeEvent<HTMLInputElement>,
     id: string
   ) => {
+    const targetName = e.target.name;
+    const value = e.target.value;
     const specificDeliveryIndex = deliveryList.findIndex(
       (delivery) => delivery.id === id
     );
-
-    setDeliveryList((prev) => {
-      const targetName = e.target.name;
-      //@ts-ignore
-      prev[specificDeliveryIndex][targetName] = {
-        valid: true,
-        value: e.target.value,
-      };
-      return [...prev];
-    });
+    if (targetName === "recipientName" || "address") {
+      if (value.length < 2) {
+        setDeliveryList((prev) => {
+          //@ts-ignore
+          prev[specificDeliveryIndex][targetName] = {
+            valid: false,
+            value: e.target.value,
+          };
+          return [...prev];
+        });
+        return;
+      }
+      setDeliveryList((prev) => {
+        //@ts-ignore
+        prev[specificDeliveryIndex][targetName] = {
+          valid: true,
+          value: e.target.value,
+        };
+        return [...prev];
+      });
+    }
+    if (
+      targetName === "altRecipientNumber" ||
+      targetName === "recipientNumber"
+    ) {
+      if (!validate.isMobilePhone(value, ["en-NG"])) {
+        setDeliveryList((prev) => {
+          //@ts-ignore
+          prev[specificDeliveryIndex][targetName] = {
+            valid: false,
+            value: e.target.value,
+          };
+          return [...prev];
+        });
+        return;
+      }
+      setDeliveryList((prev) => {
+        //@ts-ignore
+        prev[specificDeliveryIndex][targetName] = {
+          valid: true,
+          value: e.target.value,
+        };
+        return [...prev];
+      });
+    }
   };
 
   const modifyDeliveryListLocation = (e: Location, id: string) => {
@@ -74,10 +111,58 @@ export default function AddDeliveryDetails() {
     setTransition(true);
     console.log("rendered");
   }, []);
+  const [inValidList, setInValidList] = useState<
+    { id: string; valid: boolean }[]
+  >([]);
+
+  const listInvalid = useMemo(() => inValidList, [inValidList]);
+  const canAdvance = () => {
+    const validList = [];
+
+    for (let i in deliveryList) {
+      // if (deliveryList[i].address.value.length < 3) {
+      //   validList.push({name:'address', valid: false})
+      // }
+      // if(deliveryList[i].address.value.length>3){
+      //   validList.push({name:'address', valid: true})
+      // }
+      // if (deliveryList[i].recipientName.value.length < 3) {
+      //   validList.push({name:'recipientName', valid: false})
+      // }
+      // if(deliveryList[i].recipientName.value.length>3){
+      //   validList.push({name:'recipientName', valid: true})
+      // }
+      // if(deliveryList[i].locationCode.value.length>1){
+      //   validList.push({name:'locationCode', valid: true})
+      // }
+      // if(deliveryList[i].locationCode.value.length<1){
+      //   validList.push({name:'locationCode', valid: false})
+      // }
+
+      if (
+        deliveryList[i].address.value.length < 3 ||
+        deliveryList[i].recipientName.value.length < 3 ||
+        !validate.isMobilePhone(deliveryList[i].recipientNumber.value, [
+          "en-NG",
+        ]) ||
+        !validate.isMobilePhone(deliveryList[i].altRecipientNumber.value, [
+          "en-NG",
+        ]) ||
+        deliveryList[i].locationCode.value.length < 1
+      ) {
+        validList.push({ id: i, valid: false });
+      } else {
+        validList.push({ id: i, valid: true });
+      }
+    }
+
+    return validList;
+  };
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    console.log(deliveryList);
+    console.log("🐶", canAdvance());
+    setInValidList(canAdvance());
     event.preventDefault();
   };
 
@@ -105,10 +190,12 @@ export default function AddDeliveryDetails() {
           <p className="text-xs text-blue-950">
             * Multiple Drop Locations can be selected
           </p>
-          {deliveryList.map((deliveryDetail) => (
+          {deliveryList.map((deliveryDetail, idx) => (
             <DropComponent
+              index={idx.toString()}
               onChange={modifyDeliveryList}
-              onChangeLocation = {modifyDeliveryListLocation}
+              inValid={listInvalid}
+              onChangeLocation={modifyDeliveryListLocation}
               deliveryDetail={deliveryDetail}
               key={deliveryDetail.id}
               idx={deliveryDetail.id}

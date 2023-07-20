@@ -9,12 +9,16 @@ import TransitionWrapper from "../../global/Transition";
 
 export default function DropComponent({
   idx,
+  index,
+  inValid,
   onChange,
   onChangeLocation,
   onClickDelete,
   deliveryDetail,
 }: {
+  inValid: { id: string; valid: Boolean }[];
   idx: string;
+  index: string;
   deliveryDetail: DeliveryDetails;
   onChange: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
   onChangeLocation: (e: Location, id: string) => void;
@@ -23,6 +27,7 @@ export default function DropComponent({
     idx?: string
   ) => void;
 }) {
+  console.log("🚀 ~ file: DropComponent.tsx:28 ~ idx:", idx);
   const [selected, setSelected] = useState<Location>(() => {
     return { name: "Pick a location", isAvailable: false, locationCode: "0" };
   });
@@ -32,10 +37,18 @@ export default function DropComponent({
     setShow(true);
   }, []);
 
-  const handleLocation = (e: Location) => {};
+  const inValidFilter = inValid.find((invalid) => invalid.id === index);
+  console.log(
+    "🚀 ~ file: DropComponent.tsx:38 ~ inValidFilter:",
+    inValidFilter
+  );
   return (
     <TransitionWrapper show={show}>
-      <div className="border-2 bg-white rounded-lg p-4  mt-2">
+      <div
+        className={`border-2 ${
+          !inValidFilter?.valid ? "border-pink-800" : ""
+        } bg-white rounded-lg p-4  mt-2`}
+      >
         <div className="flex justify-between w-full">
           <div></div>
           {idx !== "0" && (
