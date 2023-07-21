@@ -1,7 +1,6 @@
 import Button from "@/app/components/global/Button";
 import IconButton from "@/app/components/global/IconButton";
 
-import DropComponent from "../DropComponent";
 import { Add, Back } from "iconsax-react";
 import { useEffect, useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -16,10 +15,11 @@ import {
 } from "@/types";
 import { emptyOrderList } from "@/app/util/deliveryList";
 import TransitionWrapper from "@/app/components/global/Transition";
-import Modal from "../Modal";
 import { openModal } from "@/store/local/modal";
 import { addLocationDetails } from "@/store/local/deliveryDetails";
 import { deliveryDetails } from "@/model/deliveryDetails";
+import Modal from "../components/Modal";
+import DropComponent from "../components/DropComponent";
 
 export default function AddDeliveryDetails() {
   const dispatch = useAppDispatch();
@@ -27,7 +27,7 @@ export default function AddDeliveryDetails() {
 
   const [transition, setTransition] = useState(false);
   const [backColor, setBackColor] = useState("black");
-  const [deliveryList, setDeliveryList] = useState<DeliveryDetails[]>([
+  const [deliveryList, setDeliveryList] = useState<DeliveryDetails[]>(()=>[
     emptyDeliveryDetails,
   ]);
 
@@ -113,7 +113,8 @@ export default function AddDeliveryDetails() {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     idx: string
   ) => {
-    setDeliveryList((prev) => prev.filter((prev) => prev.id !== idx));
+    setDeliveryList((prev) => [...prev.filter((prev) => prev.id !== idx)]);
+    console.log("fromDelete", deliveryList);
     e.preventDefault();
   };
 
@@ -130,6 +131,10 @@ export default function AddDeliveryDetails() {
     const validList = [];
 
     for (let i in deliveryList) {
+      console.log(
+        "🚀 ~ file: index.tsx:133 ~ canAdvance ~ deliveryList:",
+        deliveryList
+      );
       if (
         deliveryList[i].address.value.length < 3 ||
         deliveryList[i].recipientName.value.length < 3 ||
@@ -153,9 +158,12 @@ export default function AddDeliveryDetails() {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     event.preventDefault();
-    console.log("🐶", canAdvance());
+    console.log(
+      "🐶",
+      canAdvance().some((item) => item.valid === false)
+    );
     setInValidList(canAdvance());
-    if (!canAdvance().some((item) => item.valid)) {
+    if (canAdvance().some((item) => item.valid === false)) {
       dispatch(openModal({ text: "Complete the form to progress" }));
       return;
     }
@@ -193,23 +201,25 @@ export default function AddDeliveryDetails() {
       <TransitionWrapper show={transition}>
         <form>
           <div className="w-full h-full flex flex-col pb-32">
-            <Back
-              size="32"
-              onClick={() => {
-                setTransition(false);
-                dispatch(setStep("0"));
-              }}
-              color={backColor}
-              onMouseOver={() => {
-                setBackColor("#00000078");
-              }}
-              onMouseOut={() => {
-                setBackColor("black");
-              }}
-              className="cursor-pointer"
-              variant="Bulk"
-            />
-            <h1 className="mb-4 font-bold">Drop Locations</h1>
+            <div className="flex items-center mb-4 justify-between">
+              <h1 className=" font-bold">Drop Locations</h1>
+              <Back
+                size="32"
+                onClick={() => {
+                  setTransition(false);
+                  dispatch(setStep("0"));
+                }}
+                color={backColor}
+                onMouseOver={() => {
+                  setBackColor("#00000078");
+                }}
+                onMouseOut={() => {
+                  setBackColor("black");
+                }}
+                className="cursor-pointer"
+                variant="Bulk"
+              />
+            </div>
             <p className="text-xs text-blue-950">
               * Multiple Drop Locations can be selected
             </p>
@@ -236,6 +246,15 @@ export default function AddDeliveryDetails() {
             </IconButton>
 
             <Button onClick={handleClick} className="mt-6">
+              Continue
+            </Button>
+            <Button
+              onClick={(e) => {
+                e.preventDefault()
+                console.log("👺👺", deliveryList);
+              }}
+              className="mt-6"
+            >
               Continue
             </Button>
           </div>

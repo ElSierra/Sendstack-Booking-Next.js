@@ -1,14 +1,12 @@
-'use client'
-import Lottie from "lottie-react";
-import animationData from './animate.json'
-
+import DeliveryDashboard from "./DeliveryDashboard";
+import Empty from "./components/Empty";
+import Home from "./home/Home";
 
 export default function CompleteBooking() {
   return (
-    <Lottie
-    style={{ height: "500px" }}
-    animationData={animationData}
-    size={5}
-  />
-  )
+    <>
+      <Home />
+   
+    </>
+  );
 }

@@ -6,6 +6,7 @@ import AddDelivery from "./AddDeliveryDetails";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import Cookies from "js-cookie";
 import { useGetDeliveryLocationQuery } from "@/store/api/sendStackApi";
+import Start from "./Start";
 
 export default function CreateBooking() {
   const pageIdx = useAppSelector((state) => state.formStep.idx);
@@ -27,6 +28,10 @@ export default function CreateBooking() {
 
       case 1:
         return <AddDelivery />;
+      default:
+        return (
+         <Start/>
+        );
     }
   };
   return bookingComponent();

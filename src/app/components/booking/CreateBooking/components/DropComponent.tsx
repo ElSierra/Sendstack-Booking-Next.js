@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Input from "./Input";
-import IconButton from "../../global/IconButton";
+
 import { Trash } from "iconsax-react";
 import LocationDropDown from "./LocationPicker";
 import { DeliveryDetails, Location } from "@/types";
 import PhoneInput from "./phoneInput";
-import TransitionWrapper from "../../global/Transition";
+import TransitionWrapper from "@/app/components/global/Transition";
+import IconButton from "@/app/components/global/IconButton";
 
 export default function DropComponent({
   idx,
@@ -56,9 +57,10 @@ export default function DropComponent({
               ariaLabel="delete"
               onClick={(e) => {
                 setShow(false);
-                if (!show) {
-                  onClickDelete(e);
-                }
+                setTimeout(() => {
+                  onClickDelete(e, idx);
+                }, 100);
+
                 e.preventDefault();
               }}
               className="p-2"

@@ -2,11 +2,11 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   theme: {
     container: {
       center: true,
@@ -15,8 +15,9 @@ module.exports = {
         "2xl": "1400px",
       },
     },
-     screens: {
-      rsm: {'min': '0px', 'max': '768px'},
+    screens: {
+      rsm: { min: "0px", max: "768px" },
+      dp: { min: "768px"},
       sm: "640px",
       // => @media (min-width: 640px) { ... }
 
@@ -89,5 +90,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-}
+  plugins: [require("tailwindcss-animate"), require("tailwind-scrollbar")],
+};

@@ -19,7 +19,7 @@ export default function NavItem({
           isPath ? "text-[#0060e0] font-semibold" : "text-gray-400"
         } rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0`}
       >
-        <Icon size="16" color={isPath? "#0060e0":"#000000"} variant={isPath? "Bulk":"Outline"} />
+        <Icon  size="16" color={isPath? "#0060e0":"#000000"} variant={isPath? "Bulk":"Outline"} />
         {title}
       </a>
     </li>

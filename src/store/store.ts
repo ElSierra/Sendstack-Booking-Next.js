@@ -3,12 +3,14 @@ import formStep from "./local/formStep";
 import locationList from "./local/locationList";
 import deliveryDetails from "./local/deliveryDetails";
 import modal from "./local/modal";
+import user from "./local/userDetails";
 import { getSendStack } from "./api/sendStackApi";
 
 export const store = configureStore({
   reducer: {
     formStep,
     modal,
+    user,
     [getSendStack.reducerPath]: getSendStack.reducer,
     locationList,
     deliveryDetails,

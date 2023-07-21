@@ -2,10 +2,12 @@
 
 import { formatMoney } from "@/app/util/numbers";
 import { useGetBalanceQuery } from "@/store/api/sendStackApi";
+import { useAppSelector } from "@/store/hooks";
 import Image from "next/image";
 
 export default function RightSide() {
-  const balance = useGetBalanceQuery(null);
+  useGetBalanceQuery(null);
+  const balance = useAppSelector((state)=>state.user.bal)
   console.log("🚀 ~ file: RightSide.tsx:8 ~ RightSide ~ balance:", balance);
 
   return (
@@ -17,7 +19,7 @@ export default function RightSide() {
         height={80}
         className="rounded-full w-8 h-8"
       />
-      <p className="text-sm">{formatMoney(balance.data?.data?.balance || 0)}</p>
+      <p className="text-sm">{formatMoney(balance)}</p>
     </div>
   );
 }

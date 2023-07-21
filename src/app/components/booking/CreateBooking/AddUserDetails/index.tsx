@@ -1,16 +1,14 @@
 import Button from "@/app/components/global/Button";
 import React, { useEffect, useState } from "react";
-import DatePicker from "../DatePicker";
-import TextArea from "../TextArea";
-import Input from "../Input";
+import DatePicker from "../components/DatePicker";
+
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setStep } from "@/store/local/formStep";
 import { Transition } from "@headlessui/react";
 import validate from "validator";
 import { Location } from "@/types";
 import "react-phone-number-input/style.css";
-import PhoneInput from "../phoneInput";
-import LocationDropDown from "../LocationPicker";
+
 import { UserDetails, emptyUserDetails } from "@/types";
 import {
   addUserDetails,
@@ -18,6 +16,11 @@ import {
 } from "@/store/local/deliveryDetails";
 import { UserDetailsClass } from "@/model/userDetails";
 import { RefreshRightSquare } from "iconsax-react";
+import Input from "../components/Input";
+import PhoneInput from "../components/phoneInput";
+import TextArea from "../components/TextArea";
+import LocationDropDown from "../components/LocationPicker";
+import TransitionWrapper from "@/app/components/global/Transition";
 
 export default function AddUserDetails() {
   const dispatch = useAppDispatch();
@@ -35,16 +38,24 @@ export default function AddUserDetails() {
   });
 
   const userDetailsData = (): UserDetails => {
-    if (userDetailState) {
+    if (
+      userDetailState?.address &&
+      userDetailState?.pickupDate &&
+      userDetailState?.address &&
+      userDetailState?.locationCode &&
+      userDetailState?.pickupName &&
+      userDetailState?.pickupNumber &&
+      userDetailState?.altPickupNumber
+    ) {
       return new UserDetailsClass(
         userDetailState.address,
-        userDetailState.locationCode,
-        userDetailState.pickupName,
-        userDetailState.pickupNumber,
-        userDetailState.altPickupNumber,
-        new Date(userDetailState.pickupDate || ""),
-        userDetailState.note,
-        userDetailState.kg
+        userDetailState?.locationCode,
+        userDetailState?.pickupName,
+        userDetailState?.pickupNumber,
+        userDetailState?.altPickupNumber,
+        new Date(userDetailState?.pickupDate || ""),
+        userDetailState?.note,
+        userDetailState?.kg
       );
     }
     return emptyUserDetails;
@@ -151,15 +162,7 @@ export default function AddUserDetails() {
 
   const [refreshColor, setColor] = useState("red");
   return (
-    <Transition
-      show={transition}
-      enter="transition-opacity ease-linear duration-100"
-      enterFrom="opacity-0"
-      enterTo="opacity-100"
-      leave="transition-opacity ease-linear duration-100"
-      leaveFrom="opacity-100"
-      leaveTo="opacity-0"
-    >
+    <TransitionWrapper show={transition}>
       <form>
         <div className="w-full h-full flex flex-col">
           <div className="flex justify-between items-center">
@@ -181,7 +184,9 @@ export default function AddUserDetails() {
               variant="Bulk"
             />
           </div>
-          <p className="text-xs">Complete all [<span className="text-red-800">*</span>] </p>
+          <p className="text-xs">
+            Complete all [<span className="text-red-800">*</span>]{" "}
+          </p>
           <hr className="my-2" />
           <Input
             errorMsg="Please fill out this field"
@@ -285,6 +290,6 @@ export default function AddUserDetails() {
           </Button>
         </div>
       </form>
-    </Transition>
+    </TransitionWrapper>
   );
 }

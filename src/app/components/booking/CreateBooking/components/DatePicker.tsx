@@ -1,12 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { Calendar } from "../../ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
+import { Calendar } from "../../../ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "../../../ui/popover";
 import { Calendar as CalenderIcon } from "iconsax-react";
 import { formatDate } from "@/app/util/date";
-export default function DatePicker({ label, date, handleDate }: { label: string, date:Date | undefined, handleDate: (e:any)=> void }) {
-
+export default function DatePicker({
+  label,
+  date,
+  handleDate,
+}: {
+  label: string;
+  date: Date | undefined;
+  handleDate: (e: any) => void;
+}) {
   return (
     <div>
       <Popover>
