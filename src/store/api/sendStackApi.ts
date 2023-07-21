@@ -55,7 +55,7 @@ export const getSendStack = createApi({
           "Content-type": "application/json; charset=UTF-8",
         },
       }),
-      invalidatesTags: ["delivery"],
+      invalidatesTags: ["balance"],
     }),
   }),
 });

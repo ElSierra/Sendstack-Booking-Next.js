@@ -16,6 +16,7 @@ export default function DropData({
       <TableCell className="font-medium">{Drops.recipientName}</TableCell>
       <TableCell>{Drops.recipientNumber}</TableCell>
       <TableCell>{Drops.altRecipientNumber}</TableCell>
+      <TableCell>{Drops.note}</TableCell>
       <TableCell className="">{Drops.address}</TableCell>
       <TableCell className="text-right">{formatMoney(Drops.price)}</TableCell>
     </TableRow>

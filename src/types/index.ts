@@ -43,7 +43,7 @@ export const emptyUserDetails = {
   pickupNumber: { value: "", valid: true },
   altPickupNumber: { value: "", valid: true },
   pickupDate: { value: new Date(), valid: true },
-  note: { value: "", valid: true },
+  note: { value: "Be prompt", valid: true },
 };
 
 export type DeliveryDetails = {
@@ -54,7 +54,7 @@ export type DeliveryDetails = {
   recipientNumber: { value: string; valid: boolean };
   altRecipientNumber: { value: string; valid: boolean };
   price: number;
-  note : string;
+  note: { value: string; valid: boolean };
 };
 
 export type Drops = {
@@ -73,7 +73,7 @@ export const emptyDeliveryDetails = {
   recipientName: { value: "", valid: true },
   recipientNumber: { value: "", valid: true },
   altRecipientNumber: { value: "", valid: true },
-  note: '',
+  note: { value: "", valid: true },
   price: 0,
 };
 export type DeliveryPrice = {

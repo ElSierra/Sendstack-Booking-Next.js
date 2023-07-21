@@ -10,20 +10,13 @@ import IconButton from "@/app/components/global/IconButton";
 import { useAppSelector } from "@/store/hooks";
 import { useGetDeliveryPriceMutation } from "@/store/api/sendStackApi";
 import { formatMoney } from "@/app/util/numbers";
+import TextArea from "./TextArea";
 
-export default function DropComponent({
-  idx,
-  index,
-  inValid,
-  onChange,
-  onChangeLocation,
-  onClickDelete,
-  addPrice,
-  deliveryDetail,
-}: {
+export type DropComponentType = {
   inValid: { id: string; valid: Boolean }[];
   idx: string;
   index: string;
+  addNote: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
   addPrice: (price: number, id: string) => void;
   deliveryDetail: DeliveryDetails;
   onChange: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
@@ -32,28 +25,36 @@ export default function DropComponent({
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     idx?: string
   ) => void;
-}) {
-  console.log("🚀 ~ file: DropComponent.tsx:28 ~ idx:", idx);
+};
+
+export default function DropComponent({
+  idx,
+  index,
+  inValid,
+  addNote,
+  onChange,
+  onChangeLocation,
+  onClickDelete,
+  addPrice,
+  deliveryDetail,
+}: DropComponentType) {
   const [selected, setSelected] = useState<Location>(() => {
     return { name: "Pick a location", isAvailable: false, locationCode: "0" };
   });
   const [show, setShow] = useState(false);
-  const [deliveryPrice, setDeliveryPrice] = useState<number | null>(null);
+
   const userDetails = useAppSelector((state) => state.deliveryDetails.pickup);
-  const [getDeliveryFee, deliveryFeeResponse] = useGetDeliveryPriceMutation();
+  const [getDeliveryFee] = useGetDeliveryPriceMutation();
   useEffect(() => {
     setShow(true);
   }, []);
 
   const inValidFilter = inValid.find((invalid) => invalid.id === index);
-  console.log(
-    "🚀 ~ file: DropComponent.tsx:38 ~ inValidFilter:",
-    inValidFilter
-  );
+
   return (
     <TransitionWrapper show={show}>
       <div
-        className={`border-2 ${
+        className={`border-2  border-dashed  ${
           !inValidFilter?.valid ? "border-pink-800" : ""
         } bg-white rounded-lg p-4  mt-2`}
       >
@@ -96,7 +97,7 @@ export default function DropComponent({
               onChange(e, idx);
             },
           }}
-          errorMsg=""
+          errorMsg="Invalid Number"
           valid={deliveryDetail.recipientNumber.valid}
           label="Recipient Number"
         />
@@ -108,7 +109,7 @@ export default function DropComponent({
               onChange(e, idx);
             },
           }}
-          errorMsg=""
+          errorMsg="Invalid Number"
           valid={deliveryDetail.altRecipientNumber.valid}
           label="Alternate Number"
         />
@@ -148,7 +149,18 @@ export default function DropComponent({
             placeholder: "10, John Street",
           }}
         />
-        
+        <TextArea
+          errorMsg="Please Enter Note, Note must be greater than 3 "
+          valid={deliveryDetail.note.valid}
+          props={{
+            onChange: (e: any) => {
+              addNote(e, idx);
+            },
+            name: "note",
+            value: deliveryDetail.note.value,
+            placeholder: "Please be prompt",
+          }}
+        />
         <div className="flex justify-end">
           <p>{formatMoney(deliveryDetail.price || 0)}</p>
         </div>

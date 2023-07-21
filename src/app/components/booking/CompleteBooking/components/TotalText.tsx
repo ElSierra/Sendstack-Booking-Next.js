@@ -10,7 +10,7 @@ export default function TotalText() {
   );
   return (
     <div className="flex w-full justify-end text-sm my-2 ">
-      <div className="flex-col w-[50%]">
+      <div className="flex-col w-[50%] rsm:w-full">
       <div className=" flex justify-between">
           <p>Wallet Balance:</p>
           <p>{formatMoney(user.bal)}</p>

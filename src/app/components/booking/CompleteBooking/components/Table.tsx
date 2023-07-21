@@ -22,6 +22,7 @@ export default function TableComponent() {
             <TableHead>Recipient</TableHead>
             <TableHead>Number</TableHead>
             <TableHead>Alt Number</TableHead>
+            <TableHead className="">Note</TableHead>
             <TableHead className="">Address</TableHead>
             <TableHead className="">Price</TableHead>
           </TableRow>

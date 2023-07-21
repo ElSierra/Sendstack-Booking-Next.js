@@ -72,7 +72,9 @@ export default function AddUserDetails() {
         pickupName: userDetails.pickupName.value,
         pickupNumber: userDetails.pickupNumber.value,
         altPickupNumber: userDetails.altPickupNumber.value,
-        pickupDate: userDetails.pickupDate.value?.toISOString()?.split('T')[0] as string,
+        pickupDate: userDetails.pickupDate.value
+          ?.toISOString()
+          ?.split("T")[0] as string,
         note: userDetails.note.value,
         kg: userDetails.kg.value,
       })
@@ -158,7 +160,8 @@ export default function AddUserDetails() {
     !!(
       Number(userDetails?.kg?.value) > 0 && Number(userDetails?.kg?.value) <= 10
     ) &&
-    userDetails?.locationCode?.value.length > 0;
+    userDetails?.locationCode?.value.length > 0 &&
+    userDetails?.note?.value.length > 0;
 
   const [refreshColor, setColor] = useState("red");
   return (
@@ -262,6 +265,8 @@ export default function AddUserDetails() {
             }}
           />
           <TextArea
+            errorMsg="Please Add a note"
+            valid={userDetails.note.valid}
             props={{
               onChange: (e: any) => {
                 handleChange(e);

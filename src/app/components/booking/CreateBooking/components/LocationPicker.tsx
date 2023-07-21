@@ -3,6 +3,7 @@ import { Listbox, Transition } from "@headlessui/react";
 import { useGetDeliveryLocationQuery } from "@/store/api/sendStackApi";
 import { Location } from "@/types";
 import { useAppSelector } from "@/store/hooks";
+import { Location as LocationIcon} from "iconsax-react";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -18,10 +19,6 @@ export default function LocationDropDown({
   selected: Location;
 }) {
   const locationList = useAppSelector((state) => state.locationList);
-  console.log(
-    "🚀 ~ file: DropDownMenu.tsx:76 ~ LocationDropDown ~ locationList:",
-    locationList
-  );
 
   const [locations, setLocations] = useState<Location[]>([]);
 
@@ -47,11 +44,11 @@ export default function LocationDropDown({
             Location <span className="text-red-800">*</span>
           </Listbox.Label>
           <div className="relative mt-0.5">
-            <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
+            <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5  pl-4 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
               <span className="flex items-center">
-                <span className="ml-3 block truncate">{selected?.name}</span>
+                <span className=" block truncate text-sm">{selected?.name}</span>
               </span>
-              <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2"></span>
+              <span className="pointer-events-none absolute inset-y-0 right-0  flex items-center pr-4"><LocationIcon variant="Bulk" /></span>
             </Listbox.Button>
 
             <Transition
@@ -68,7 +65,7 @@ export default function LocationDropDown({
                     className={({ active }) =>
                       classNames(
                         active ? "bg-indigo-600 text-white" : "text-gray-900",
-                        "relative cursor-default select-none py-2 pl-3 pr-9"
+                        "  relative cursor-default select-none py-2 pl-3 pr-9 "
                       )
                     }
                     value={location}
@@ -79,7 +76,7 @@ export default function LocationDropDown({
                           <span
                             className={classNames(
                               selected ? "font-semibold" : "font-normal",
-                              "ml-3 block truncate"
+                              "ml-3 block truncate text-sm"
                             )}
                           >
                             {location.name}

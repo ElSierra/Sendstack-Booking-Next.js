@@ -14,7 +14,7 @@ export class deliveryDetails {
     recipientNumber: { value: string; valid: boolean },
     altRecipientNumber: { value: string; valid: boolean },
     price: number,
-    note: string
+    note: {value:string, valid:boolean}
   ) {
     this.locationCode = locationCode.value;
     this.address = address.value;
@@ -22,6 +22,6 @@ export class deliveryDetails {
     this.recipientNumber = recipientNumber.value;
     this.altRecipientNumber = altRecipientNumber.value;
     this.price = price;
-    this.note = note;
+    this.note = note.value;
   }
 }

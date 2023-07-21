@@ -2,7 +2,7 @@ import Button from "@/app/components/global/Button";
 import IconButton from "@/app/components/global/IconButton";
 
 import { Add, Back } from "iconsax-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import validate from "validator";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -20,9 +20,11 @@ import { addLocationDetails } from "@/store/local/deliveryDetails";
 import { deliveryDetails } from "@/model/deliveryDetails";
 import Modal from "../components/Modal";
 import DropComponent from "../components/DropComponent";
+import { useRouter } from "next/navigation";
 
 export default function AddDeliveryDetails() {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const fulldeliveryData = useAppSelector((state) => state.deliveryDetails);
 
   const [transition, setTransition] = useState(false);
@@ -110,6 +112,28 @@ export default function AddDeliveryDetails() {
       return [...prev];
     });
   };
+  const addnote = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
+    const specificDeliveryIndex = deliveryList.findIndex(
+      (delivery) => delivery.id === id
+    );
+    if (e.target.value.length > 3) {
+      setDeliveryList((prev) => {
+        prev[specificDeliveryIndex].note = {
+          valid: true,
+          value: e.target.value,
+        };
+        return [...prev];
+      });
+    } else {
+      setDeliveryList((prev) => {
+        prev[specificDeliveryIndex].note = {
+          valid: false,
+          value: e.target.value,
+        };
+        return [...prev];
+      });
+    }
+  };
   const handleAddNew = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     idx: string
@@ -131,6 +155,7 @@ export default function AddDeliveryDetails() {
   const [inValidList, setInValidList] = useState<
     { id: string; valid: boolean }[]
   >([]);
+  const windowSize = useRef([window.innerWidth, window.innerHeight]);
 
   const listInvalid = useMemo(() => inValidList, [inValidList]);
   console.log(
@@ -154,7 +179,8 @@ export default function AddDeliveryDetails() {
         !validate.isMobilePhone(deliveryList[i].altRecipientNumber.value, [
           "en-NG",
         ]) ||
-        deliveryList[i].locationCode.value.length < 1
+        deliveryList[i].locationCode.value.length < 1 ||
+        deliveryList[i].note.value.length < 3
       ) {
         validList.push({ id: i, valid: false });
       } else {
@@ -200,12 +226,14 @@ export default function AddDeliveryDetails() {
     dispatch(addLocationDetails(drops));
     if (fulldeliveryData.pickup) {
       dispatch(setStep("2"));
+      if (windowSize.current[0] <= 768) {
+        router.push("complete-booking");
+      }
     }
     event.preventDefault();
   };
   useEffect(() => {
     setTransition(true);
-    
   }, []);
 
   if (!fulldeliveryData.pickup) {
@@ -242,6 +270,7 @@ export default function AddDeliveryDetails() {
             {deliveryList.map((deliveryDetail, idx) => (
               <DropComponent
                 index={idx.toString()}
+                addNote={addnote}
                 onChange={modifyDeliveryList}
                 addPrice={addPrice}
                 inValid={listInvalid}
