@@ -2,6 +2,7 @@
 import Lottie from "lottie-react";
 import animationData from "../assets/bike.json";
 import Button from "@/app/components/global/Button";
+import Link from "next/link";
 
 export default function Completed() {
   return (
@@ -11,7 +12,7 @@ export default function Completed() {
         animationData={animationData}
        size={0}
       />
-      <Button className="">Check Your Delivery</Button>
+      <Link href={"deliveries"}><Button onClick={()=>null} className="">Check Your Delivery</Button></Link>
     </div>
   );
 }

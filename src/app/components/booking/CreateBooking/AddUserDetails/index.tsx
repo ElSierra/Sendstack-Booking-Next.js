@@ -15,7 +15,7 @@ import {
   removeUserDetails,
 } from "@/store/local/deliveryDetails";
 import { UserDetailsClass } from "@/model/userDetails";
-import { RefreshRightSquare } from "iconsax-react";
+import { RefreshCircle, RefreshRightSquare } from "iconsax-react";
 import Input from "../components/Input";
 import PhoneInput from "../components/phoneInput";
 import TextArea from "../components/TextArea";
@@ -163,6 +163,8 @@ export default function AddUserDetails() {
     userDetails?.locationCode?.value.length > 0 &&
     userDetails?.note?.value.length > 0;
 
+  const [spin, setSpin] = useState(false);
+
   const [refreshColor, setColor] = useState("red");
   return (
     <TransitionWrapper show={transition}>
@@ -170,7 +172,7 @@ export default function AddUserDetails() {
         <div className="w-full h-full flex flex-col">
           <div className="flex justify-between items-center">
             <h1 className=" font-bold">Send Item</h1>{" "}
-            <RefreshRightSquare
+            <RefreshCircle
               size="32"
               onMouseOver={() => {
                 setColor("black");
@@ -178,10 +180,14 @@ export default function AddUserDetails() {
               onMouseLeave={() => {
                 setColor("red");
               }}
-              className="cursor-pointer"
+              className={`cursor-pointer ${spin ? "animate-spin" : ""}`}
               onClick={() => {
+                setSpin(true);
                 dispatch(removeUserDetails());
                 setUserDetails(emptyUserDetails);
+                setTimeout(() => {
+                  setSpin(false);
+                }, 1000);
               }}
               color={refreshColor}
               variant="Bulk"

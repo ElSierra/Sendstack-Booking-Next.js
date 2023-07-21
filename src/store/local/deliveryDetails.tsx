@@ -10,7 +10,7 @@ const deliveryDetails = createSlice({
   initialState: {
     pickup:
       typeof window !== "undefined" && Cookies.get("_ssUD")
-        ? JSON.parse(Cookies.get("_ssUD") || "")
+        ? JSON.parse(Cookies.get("_ssUD") || "{}")
         : null,
     drops: [],
   } as DeliveryDetails,
