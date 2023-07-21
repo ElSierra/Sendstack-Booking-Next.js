@@ -6,5 +6,7 @@ export const emptyOrderList = (id: string) => {
       recipientName: { value: "", valid: true },
       recipientNumber: { value: "", valid: true },
       altRecipientNumber: { value: "", valid: true },
+      price: 0,
+      note: '',
     };
   };

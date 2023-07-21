@@ -29,6 +29,7 @@ const deliveryDetails = createSlice({
           expires: newTime,
         });
       }
+      console.log("🐶 State", state);
     },
     addLocationDetails: (state, action: PayloadAction<Drops[]>) => {
       let currentTime = new Date();

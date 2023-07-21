@@ -1,4 +1,10 @@
-import { Balance } from "@/types";
+import {
+  Balance,
+  DeliveryData,
+  DeliveryDataResponse,
+  DeliveryPrice,
+  DeliveryPriceResponse,
+} from "@/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
 
@@ -18,7 +24,7 @@ export const getSendStack = createApi({
       }
     },
   }),
-  tagTypes: ["balance", "delivery", "location"],
+  tagTypes: ["balance", "delivery", "location", "deliveryFee"],
 
   endpoints: (builder) => ({
     getBalance: builder.query<Balance, null>({
@@ -29,7 +35,34 @@ export const getSendStack = createApi({
       query: () => "/locations",
       providesTags: ["location"],
     }),
+    getDeliveryPrice: builder.mutation<DeliveryPriceResponse, DeliveryPrice>({
+      query: (payload) => ({
+        url: "/deliveries/price",
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+      invalidatesTags: ["deliveryFee"],
+    }),
+    requestDelivery: builder.mutation<DeliveryDataResponse, DeliveryData>({
+      query: (payload) => ({
+        url: "/deliveries",
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+      invalidatesTags: ["delivery"],
+    }),
   }),
 });
 
-export const { useGetBalanceQuery, useGetDeliveryLocationQuery } = getSendStack;
+export const {
+  useGetBalanceQuery,
+  useGetDeliveryLocationQuery,
+  useGetDeliveryPriceMutation,
+  useRequestDeliveryMutation,
+} = getSendStack;

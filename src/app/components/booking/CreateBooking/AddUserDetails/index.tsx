@@ -72,7 +72,7 @@ export default function AddUserDetails() {
         pickupName: userDetails.pickupName.value,
         pickupNumber: userDetails.pickupNumber.value,
         altPickupNumber: userDetails.altPickupNumber.value,
-        pickupDate: userDetails.pickupDate.value,
+        pickupDate: userDetails.pickupDate.value?.toISOString()?.split('T')[0] as string,
         note: userDetails.note.value,
         kg: userDetails.kg.value,
       })

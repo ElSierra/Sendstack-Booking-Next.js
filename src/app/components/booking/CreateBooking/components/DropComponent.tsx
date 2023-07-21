@@ -7,6 +7,9 @@ import { DeliveryDetails, Location } from "@/types";
 import PhoneInput from "./phoneInput";
 import TransitionWrapper from "@/app/components/global/Transition";
 import IconButton from "@/app/components/global/IconButton";
+import { useAppSelector } from "@/store/hooks";
+import { useGetDeliveryPriceMutation } from "@/store/api/sendStackApi";
+import { formatMoney } from "@/app/util/numbers";
 
 export default function DropComponent({
   idx,
@@ -15,11 +18,13 @@ export default function DropComponent({
   onChange,
   onChangeLocation,
   onClickDelete,
+  addPrice,
   deliveryDetail,
 }: {
   inValid: { id: string; valid: Boolean }[];
   idx: string;
   index: string;
+  addPrice: (price: number, id: string) => void;
   deliveryDetail: DeliveryDetails;
   onChange: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
   onChangeLocation: (e: Location, id: string) => void;
@@ -33,7 +38,9 @@ export default function DropComponent({
     return { name: "Pick a location", isAvailable: false, locationCode: "0" };
   });
   const [show, setShow] = useState(false);
-
+  const [deliveryPrice, setDeliveryPrice] = useState<number | null>(null);
+  const userDetails = useAppSelector((state) => state.deliveryDetails.pickup);
+  const [getDeliveryFee, deliveryFeeResponse] = useGetDeliveryPriceMutation();
   useEffect(() => {
     setShow(true);
   }, []);
@@ -108,7 +115,20 @@ export default function DropComponent({
 
         <LocationDropDown
           handleLocation={(e) => {
+            console.log("🚀LOCATION ~ file: DropComponent.tsx:115 ~ e:", e);
             onChangeLocation(e, idx);
+            getDeliveryFee({
+              pickupCode: userDetails?.locationCode as string,
+              dropoffCode: e.locationCode,
+              pickupDate: userDetails?.pickupDate as string,
+            })
+              .unwrap()
+              .then((e) => {
+                addPrice(e.data.price, idx);
+              })
+              .catch((e) => {
+                console.log(e);
+              });
           }}
           selected={selected}
           setSelected={setSelected}
@@ -128,6 +148,10 @@ export default function DropComponent({
             placeholder: "10, John Street",
           }}
         />
+        
+        <div className="flex justify-end">
+          <p>{formatMoney(deliveryDetail.price || 0)}</p>
+        </div>
       </div>
     </TransitionWrapper>
   );

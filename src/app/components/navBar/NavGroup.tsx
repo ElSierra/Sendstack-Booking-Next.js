@@ -29,6 +29,7 @@ export default function NavGroup() {
         <ul className="flex  flex-col rsm:hidden font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white">
           <NavItem name="home" title="Dashboard" Icon={Home} />
           <NavItem name="/" title="Send" Icon={TruckFast} />
+          <NavItem name="/deliveries" title="Deliveries" Icon={TruckFast} />
         </ul>
         <Transition
           show={openDropDown}

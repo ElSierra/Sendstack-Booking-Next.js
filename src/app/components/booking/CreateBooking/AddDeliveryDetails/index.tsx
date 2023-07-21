@@ -27,7 +27,7 @@ export default function AddDeliveryDetails() {
 
   const [transition, setTransition] = useState(false);
   const [backColor, setBackColor] = useState("black");
-  const [deliveryList, setDeliveryList] = useState<DeliveryDetails[]>(()=>[
+  const [deliveryList, setDeliveryList] = useState<DeliveryDetails[]>(() => [
     emptyDeliveryDetails,
   ]);
 
@@ -97,6 +97,16 @@ export default function AddDeliveryDetails() {
         valid: true,
         value: e.locationCode,
       };
+      return [...prev];
+    });
+  };
+  const addPrice = (price: number, id: string) => {
+    const specificDeliveryIndex = deliveryList.findIndex(
+      (delivery) => delivery.id === id
+    );
+
+    setDeliveryList((prev) => {
+      prev[specificDeliveryIndex].price = price;
       return [...prev];
     });
   };
@@ -177,7 +187,9 @@ export default function AddDeliveryDetails() {
           deliveryList[i].address,
           deliveryList[i].recipientName,
           deliveryList[i].recipientNumber,
-          deliveryList[i].altRecipientNumber
+          deliveryList[i].altRecipientNumber,
+          deliveryList[i].price || 0,
+          deliveryList[i].note
         )
       );
     }
@@ -193,8 +205,12 @@ export default function AddDeliveryDetails() {
   };
   useEffect(() => {
     setTransition(true);
-    console.log("rendered");
+    
   }, []);
+
+  if (!fulldeliveryData.pickup) {
+    dispatch(setStep("0"));
+  }
   return (
     <>
       <Modal />
@@ -227,6 +243,7 @@ export default function AddDeliveryDetails() {
               <DropComponent
                 index={idx.toString()}
                 onChange={modifyDeliveryList}
+                addPrice={addPrice}
                 inValid={listInvalid}
                 onChangeLocation={modifyDeliveryListLocation}
                 deliveryDetail={deliveryDetail}
@@ -245,14 +262,11 @@ export default function AddDeliveryDetails() {
               <Add size="30" color="#FFFFFF" variant="Linear" />
             </IconButton>
 
-            <Button onClick={handleClick} className="mt-6">
-              Continue
-            </Button>
             <Button
-              onClick={(e) => {
-                e.preventDefault()
-                console.log("👺👺", deliveryList);
+              props={{
+                disabled: deliveryList.some((list) => list.price === 0),
               }}
+              onClick={handleClick}
               className="mt-6"
             >
               Continue

@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans , Space_Grotesk} from "next/font/google";
+import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import NavBar from "./components/navBar/NavBar";
 import { Providers } from "@/store/provider";
 

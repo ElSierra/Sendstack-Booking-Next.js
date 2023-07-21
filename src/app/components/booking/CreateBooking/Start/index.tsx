@@ -7,7 +7,7 @@ export default function Start() {
   const dispatch = useAppDispatch()
   return (
     <div className="flex items-center w-full flex-col">
-      <Button onClick={()=>{
+      <Button className="" onClick={()=>{
         dispatch(setStep("0"))
       }}>Make a new booking</Button>
     </div>
