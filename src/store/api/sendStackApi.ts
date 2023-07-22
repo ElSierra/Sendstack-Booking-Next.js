@@ -4,9 +4,11 @@ import {
   DeliveryDataResponse,
   DeliveryPrice,
   DeliveryPriceResponse,
+  DeliveryResponse,
 } from "@/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
+
 
 export const getSendStack = createApi({
   reducerPath: "userInfo",
@@ -24,7 +26,7 @@ export const getSendStack = createApi({
       }
     },
   }),
-  tagTypes: ["balance", "delivery", "location", "deliveryFee"],
+  tagTypes: ["balance", "delivery", "location", "deliveryFee", "deliveries"],
 
   endpoints: (builder) => ({
     getBalance: builder.query<Balance, null>({
@@ -34,6 +36,10 @@ export const getSendStack = createApi({
     getDeliveryLocation: builder.query<any, null>({
       query: () => "/locations",
       providesTags: ["location"],
+    }),
+    getDeliveries: builder.query<DeliveryResponse, {limit: number, page: number}>({
+      query: (payload) => `/deliveries?limit=${payload.limit}&page=${payload.page}`,
+      providesTags: ["deliveries"],
     }),
     getDeliveryPrice: builder.mutation<DeliveryPriceResponse, DeliveryPrice>({
       query: (payload) => ({
@@ -65,4 +71,5 @@ export const {
   useGetDeliveryLocationQuery,
   useGetDeliveryPriceMutation,
   useRequestDeliveryMutation,
+  useGetDeliveriesQuery,
 } = getSendStack;

@@ -195,16 +195,8 @@ export type DropsResponse = {
   amount: number;
   pickupOtp: string;
   dropoffOtp: string;
-  estimatedPickupWindow?: {
-    date: string;
-    start: string;
-    end: string;
-  };
-  estimatedDropoffWindow?: {
-    date: string;
-    start: string;
-    end: string;
-  };
+  estimatedPickupWindow: estimatedTime;
+  estimatedDropoffWindow: estimatedTime;
   assignedTo?: {
     rider: {
       name: string;
@@ -213,10 +205,18 @@ export type DropsResponse = {
     deliveryCompanyId: string;
     deliveryCompanyName: string;
   };
-  statusTimestamps: {
-    id: string;
-    note: string;
-    status: string;
-    timestamp: string;
-  };
+  statusTimestamps: StatusTimeStamps[];
+};
+
+export type StatusTimeStamps = {
+  id: string;
+  note: string;
+  status: string;
+  timestamp: string;
+};
+
+export type estimatedTime = {
+  date: string;
+  start: string;
+  end: string;
 };

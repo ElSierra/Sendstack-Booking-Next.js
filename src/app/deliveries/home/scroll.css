@@ -1,0 +1,7 @@
+.infinite-scroll{
+
+}
+
+.infinite-scroll::-webkit-scrollbar {
+   display: none;/* make scrollbar transparent */
+}

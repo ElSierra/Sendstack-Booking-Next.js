@@ -18,7 +18,7 @@ export default function IconButton({
     <button
       onClick={onClick}
       aria-label={ariaLabel}
-      className={`bg-[#192528] hover:bg-blue-700 text-white font-bold  rounded-lg w-fit  overflow-hidden  ${className}`}
+      className={`bg-[#192528] hover:bg-[#722973] text-white font-bold  rounded-lg w-fit  overflow-hidden  ${className}`}
     >
       {children}
     </button>

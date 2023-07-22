@@ -30,7 +30,7 @@ export default function Button({
         props?.disabled || loading ? "bg-[transparent]" : "bg-[transparent]"
       } ${
         props?.disabled || loading ? "" : "hover:bg-slate-300"
-      } border-[1.5px]  text-black text-xs font-bold py-1 px-2 rounded  ${className}`}
+      } border-[1.5px] flex items-center justify-between mb-[0.1rem]  text-black text-xs font-bold py-1 px-2 rounded  ${className}`}
       {...props}
     >
       {loading ? (
