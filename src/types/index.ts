@@ -146,3 +146,77 @@ export type DeliveryDataResponse = {
     trackingUrl: string;
   };
 };
+
+export type DeliveryResponse = {
+  status: boolean;
+  message: string;
+  data: {
+    results: DeliveryResponseResult[];
+    page: number;
+    limit: number;
+    totalPages: number;
+    totalResults: number;
+  };
+};
+
+export type DeliveryResponseResult = {
+  id: string;
+  paymentStatus: string;
+  paymentSource: string;
+  afterPickupSms: boolean;
+  batchId: string;
+  customerId: string;
+  totalAmount: number;
+  otp: string;
+  pickup: {
+    address: string;
+    locationCode: string;
+    pickupName: string;
+    pickupNumber: string;
+    altPickupNumber: string;
+    pickupDate: string;
+    note: string;
+    state: string;
+  };
+  drops: DropsResponse[];
+};
+
+export type DropsResponse = {
+  id: string;
+  status: string;
+  trackingId: string;
+  batchId: string;
+  locationCode: string;
+  address: string;
+  recipientName: string;
+  recipientNumber: string;
+  altRecipientNumber: string;
+  state: string;
+  amount: number;
+  pickupOtp: string;
+  dropoffOtp: string;
+  estimatedPickupWindow?: {
+    date: string;
+    start: string;
+    end: string;
+  };
+  estimatedDropoffWindow?: {
+    date: string;
+    start: string;
+    end: string;
+  };
+  assignedTo?: {
+    rider: {
+      name: string;
+      phone: string;
+    };
+    deliveryCompanyId: string;
+    deliveryCompanyName: string;
+  };
+  statusTimestamps: {
+    id: string;
+    note: string;
+    status: string;
+    timestamp: string;
+  };
+};
