@@ -1,6 +1,6 @@
 # SendStack Test
 
-![Booking Page]('./screenshot/ss.png')  
+![Booking Page](./screenshot/ss.png)  
 ## Features
 
 - Delivery Booking
