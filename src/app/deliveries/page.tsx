@@ -13,7 +13,7 @@ export default async function Deliveries() {
   const fetchDeliveries = async () => {
     try {
       const deliveries = await axios.get(
-        "https://sandbox.sendstack.africa/api/v1/deliveries?page=0&limit=10",
+        "https://sandbox.sendstack.africa/api/v1/deliveries?page=0&limit=5",
         {
           headers: {
             app_id: auth?.appId,

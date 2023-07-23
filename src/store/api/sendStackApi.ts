@@ -43,7 +43,7 @@ export const getSendStack = createApi({
     >({
       query: (payload) =>
         `/deliveries?limit=${payload.limit}&page=${payload.page}`,
-      providesTags: ["deliveries"],
+      providesTags: [],
     }),
     getDeliveryPrice: builder.mutation<DeliveryPriceResponse, DeliveryPrice>({
       query: (payload) => ({
@@ -79,7 +79,7 @@ export const getSendStack = createApi({
           "Content-type": "application/json; charset=UTF-8",
         },
       }),
-      invalidatesTags: ["balance", "deliveries"],
+      invalidatesTags: ["balance"],
     }),
   }),
 });

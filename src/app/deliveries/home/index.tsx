@@ -1,29 +1,32 @@
 "use client";
 import { DeliveryResponse, DeliveryResponseResult } from "@/types";
 import DeliveryCard from "../components/DeliveryCard";
-import { useEffect,  useState } from "react";
+import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useGetDeliveriesQuery } from "@/store/api/sendStackApi";
 import { Loader2 } from "lucide-react";
 import "./scroll.css";
 
-
 export default function Home({ deliveries }: { deliveries: DeliveryResponse }) {
-
-
-  const [deliveriesList, setDeliveriesList] = useState<DeliveryResponseResult[]>(
-    []
+  
+  const [deliveriesList, setDeliveriesList] = useState<
+    DeliveryResponseResult[]
+  >(() => deliveries?.data?.results);
+  console.log(
+    "🚀 ~ file: index.tsx:17 ~ Home ~ deliveriesList:",
+    deliveriesList.length
   );
- 
+console.log('called',)
   const [hasMore, setHasMore] = useState(true);
   const deliveriesFromServer = useGetDeliveriesQuery({
-    limit: deliveriesList.length,
-    page: 10,
+    limit: deliveriesList?.length,
+    page: 5,
   });
+
+  
 
   const getMoreData = () => {
     if (deliveriesFromServer.data) {
-      
       setDeliveriesList((prev) => [
         ...prev,
         ...(deliveriesFromServer.data?.data?.results || []),
@@ -33,18 +36,12 @@ export default function Home({ deliveries }: { deliveries: DeliveryResponse }) {
   const Icons = {
     spinner: Loader2,
   };
-  useEffect(() => {
-    if (deliveries.data.results.length >0) {
-      setDeliveriesList((prev) => [...prev, ...deliveries?.data?.results]);
-    }
-  }, [deliveries?.data?.results]);
+
   useEffect(() => {
     if (deliveriesFromServer.data?.data.results.length === 0) {
       setHasMore(false);
     }
-  }, [
-    deliveriesFromServer.data?.data.results,
-  ]);
+  }, [deliveriesFromServer.data?.data.results]);
 
   return (
     <div className="overflow-auto">
