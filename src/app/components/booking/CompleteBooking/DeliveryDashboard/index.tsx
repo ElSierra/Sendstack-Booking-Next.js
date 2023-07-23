@@ -103,11 +103,7 @@ export default function DeliveryDashboard() {
               Book Pickup
             </Button>
           </div>
-          {requestDeliveryResponse.isSuccess ? (
-            <p>hkhkhkhkh</p>
-          ) : (
-            <p>not yet</p>
-          )}
+      
         </div>
       </TransitionWrapper>
     </>

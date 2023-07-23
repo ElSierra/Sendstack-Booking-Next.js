@@ -17,11 +17,13 @@ const DeliveryList = createSlice({
       action: PayloadAction<DeliveryResponseResult[]>
     ) => {
       let updatedDeliveries = [...state.Deliveries, ...action.payload];
-      console.log("🚀 ~ file: deliveryList.tsx:20 ~ updatedDeliveries:", updatedDeliveries)
       state.Deliveries = updatedDeliveries;
     },
+    clearDeliveryList: (state)=>{
+      state.Deliveries = []
+    }
   },
 });
 
-export const { addToDeliveryList, } = DeliveryList.actions;
+export const { addToDeliveryList,clearDeliveryList } = DeliveryList.actions;
 export default DeliveryList.reducer;

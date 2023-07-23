@@ -69,7 +69,7 @@ export default function CancelModal({ delivId }: { delivId: string }) {
                         loading = {cancelResponse.isLoading}
                         className="inline-flex justify-center "
                         onClick={() => {
-                          console.log("trackId", modalState.id);
+                        
                           cancel({
                             deliveryId: delivId,
                             trackingId: modalState.id || "",
@@ -86,10 +86,7 @@ export default function CancelModal({ delivId }: { delivId: string }) {
                               close();
                             })
                             .catch((e) => {
-                              console.log(
-                                "🚀 ~ file: CancelModal.tsx:85 ~ e:",
-                                e
-                              );
+                              
                               Swal.fire({
                                 title: "Error",
                                 text: e?.data?.message,

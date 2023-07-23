@@ -36,8 +36,7 @@ export default function DropsCard({
   const status = drops?.status;
   const cancelList = useAppSelector((state) => state.cancelList.id);
   const filteredCancel = cancelList.includes(drops.trackingId);
-  console.log("🚀 ~ file: DropsCard.tsx:39 ~ filteredCancel:", cancelList);
-  console.log("🚀 ~ file: DropsCard.tsx:39 ~ filteredCancel:", filteredCancel);
+ 
   return (
     <>
       {/* <ModalTime/> */}
