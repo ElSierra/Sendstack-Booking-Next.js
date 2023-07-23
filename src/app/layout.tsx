@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import NavBar from "./components/navBar/NavBar";
 import { Providers } from "@/store/provider";
+import NavBarBottom from "./components/navBar/NavBarMobileBottom";
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
         <Providers>
           <NavBar />
           {children}
+          <NavBarBottom/>
         </Providers>
       </body>
     </html>
