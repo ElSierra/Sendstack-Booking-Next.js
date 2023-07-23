@@ -16,9 +16,15 @@
 - [Headless UI](https://headlessui.com/)
 - [Axios](https://axios-http.com/)
 
-## Running the app
+## Development
 
 1. Clone the repository.
 2. Install dependencies with `npm install`.
 3. Run the development server with `npm run dev`.
-4. Run the production server with `npm run start`.
+
+## Production
+
+1. Clone the repository.
+2. Install dependencies with `npm install`.
+3. Build the production server with `npm run build`.
+4. Run the server `npm run start`.
