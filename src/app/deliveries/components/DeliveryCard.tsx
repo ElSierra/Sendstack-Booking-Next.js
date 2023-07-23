@@ -66,7 +66,7 @@ function DeliveryCard({
       </Button>
       <TransitionWrapper show={show}>
         {DeliveryData?.drops?.map((drops, idx) => (
-          <DropsCard key={drops.id} drops={drops} id={idx} />
+          <DropsCard key={drops.id} drops={drops} delivId={DeliveryData.id} id={idx} />
         ))}
       </TransitionWrapper>
       <hr className="my-2" />

@@ -3,6 +3,9 @@
 @tailwind utilities;
  
 @layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -76,6 +79,7 @@
     @apply bg-background text-foreground;
   }
 }
+
 
 body {
   

@@ -19,17 +19,14 @@ const deliveryDetails = createSlice({
       let currentTime = new Date();
       let newTime = new Date(currentTime.getTime() + 30 * 60000);
       state.pickup = action.payload;
-      console.log(
-        "🚀 ~ file: deliveryDetails.tsx:15 ~ payload:",
-        action.payload
-      );
+     
       if (typeof window !== "undefined") {
         Cookies.remove("_ssUD");
         Cookies.set("_ssUD", JSON.stringify(action.payload), {
           expires: newTime,
         });
       }
-      console.log("🐶 State", state);
+      
     },
     addLocationDetails: (state, action: PayloadAction<Drops[]>) => {
       let currentTime = new Date();

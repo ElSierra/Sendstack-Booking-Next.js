@@ -11,7 +11,7 @@ import { setStep } from "@/store/local/formStep";
 import { useRequestDeliveryMutation } from "@/store/api/sendStackApi";
 import { RequestDeliveryData } from "@/model/requestDeliveryData";
 import { RequestDropData } from "@/model/requestDropData";
-import Modal from "../../CreateBooking/components/Modal";
+import Modal from "../../../global/Modal";
 import { openModal } from "@/store/local/modal";
 
 export default function DeliveryDashboard() {
@@ -92,14 +92,9 @@ export default function DeliveryDashboard() {
                   })
                     .unwrap()
                     .then((e) => {
-                      dispatch(setStep('3'))
-                      console.log(
-                        "🚀 ~ file: index.tsx:66 ~ DeliveryDashboard ~ e:",
-                        e
-                      );
+                      dispatch(setStep("3"));
                     })
                     .catch((e) => {
-                      console.log("🚀 ~ file: index.tsx:101 ~ DeliveryDashboard ~ e:", e.data?.message)
                       dispatch(openModal({ text: `⚠️ ${e.data?.message}` }));
                     });
                 }

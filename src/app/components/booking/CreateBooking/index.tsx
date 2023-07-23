@@ -16,10 +16,7 @@ export default function CreateBooking() {
   };
   useGetDeliveryLocationQuery(null);
   const locationList = useAppSelector((state) => state.locationList);
-  console.log(
-    "🚀 ~ file: index.tsx:19 ~ CreateBooking ~ locationList:",
-    locationList
-  );
+
   Cookies.set("ss-auth", JSON.stringify(auth));
   const bookingComponent = () => {
     switch (Number(pageIdx)) {

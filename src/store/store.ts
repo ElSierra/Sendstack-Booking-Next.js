@@ -4,7 +4,10 @@ import locationList from "./local/locationList";
 import deliveryDetails from "./local/deliveryDetails";
 import modal from "./local/modal";
 import modalTrack from "./local/modalTrack";
+import modalCancel from "./local/modalCancel";
 import user from "./local/userDetails";
+import cancelList from './local/cancelledUpdateState'
+import deliveryList from "./local/deliveryList";
 import { getSendStack } from "./api/sendStackApi";
 
 export const store = configureStore({
@@ -12,7 +15,11 @@ export const store = configureStore({
     formStep,
     modal,
     modalTrack,
+    modalCancel,
+    cancelList,
+    deliveryList,
     user,
+
     [getSendStack.reducerPath]: getSendStack.reducer,
     locationList,
     deliveryDetails,

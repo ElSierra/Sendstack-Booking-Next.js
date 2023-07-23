@@ -18,7 +18,7 @@ import TransitionWrapper from "@/app/components/global/Transition";
 import { openModal } from "@/store/local/modal";
 import { addLocationDetails } from "@/store/local/deliveryDetails";
 import { deliveryDetails } from "@/model/deliveryDetails";
-import Modal from "../components/Modal";
+import Modal from "../../../global/Modal";
 import DropComponent from "../components/DropComponent";
 import { useRouter } from "next/navigation";
 
@@ -139,7 +139,7 @@ export default function AddDeliveryDetails() {
     idx: string
   ) => {
     setDeliveryList((prev) => [...prev, emptyOrderList(uuidv4())]);
-    console.log(deliveryList);
+
     e.preventDefault();
   };
 
@@ -148,7 +148,7 @@ export default function AddDeliveryDetails() {
     idx: string
   ) => {
     setDeliveryList((prev) => [...prev.filter((prev) => prev.id !== idx)]);
-    console.log("fromDelete", deliveryList);
+
     e.preventDefault();
   };
 
@@ -158,18 +158,11 @@ export default function AddDeliveryDetails() {
   const windowSize = useRef([window.innerWidth, window.innerHeight]);
 
   const listInvalid = useMemo(() => inValidList, [inValidList]);
-  console.log(
-    "🚀 ~ file: index.tsx:120 ~ AddDeliveryDetails ~ listInvalid:",
-    listInvalid
-  );
+
   const canAdvance = () => {
     const validList = [];
 
     for (let i in deliveryList) {
-      console.log(
-        "🚀 ~ file: index.tsx:133 ~ canAdvance ~ deliveryList:",
-        deliveryList
-      );
       if (
         deliveryList[i].address.value.length < 3 ||
         deliveryList[i].recipientName.value.length < 3 ||
@@ -194,10 +187,7 @@ export default function AddDeliveryDetails() {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     event.preventDefault();
-    console.log(
-      "🐶",
-      canAdvance().some((item) => item.valid === false)
-    );
+
     setInValidList(canAdvance());
     if (canAdvance().some((item) => item.valid === false)) {
       dispatch(openModal({ text: "Complete the form to progress" }));
@@ -219,10 +209,7 @@ export default function AddDeliveryDetails() {
         )
       );
     }
-    console.log(
-      "🚀 ~ file: index.tsx:161 ~ AddDeliveryDetails ~ drops:",
-      drops
-    );
+
     dispatch(addLocationDetails(drops));
     if (fulldeliveryData.pickup) {
       dispatch(setStep("2"));

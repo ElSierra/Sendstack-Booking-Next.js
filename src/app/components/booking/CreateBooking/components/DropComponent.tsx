@@ -116,7 +116,7 @@ export default function DropComponent({
 
         <LocationDropDown
           handleLocation={(e) => {
-            console.log("🚀LOCATION ~ file: DropComponent.tsx:115 ~ e:", e);
+          
             onChangeLocation(e, idx);
             getDeliveryFee({
               pickupCode: userDetails?.locationCode as string,
@@ -128,7 +128,7 @@ export default function DropComponent({
                 addPrice(e.data.price, idx);
               })
               .catch((e) => {
-                console.log(e);
+               
               });
           }}
           selected={selected}

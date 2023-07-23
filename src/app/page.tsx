@@ -1,6 +1,6 @@
-import { setCookie } from "cookies-next";
+
 import Booking from "./components/booking/Booking";
-import { useGetBalanceQuery } from "@/store/api/sendStackApi";
+
 
 
 export default function Home() {

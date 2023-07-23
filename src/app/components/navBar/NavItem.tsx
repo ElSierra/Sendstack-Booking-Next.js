@@ -12,7 +12,7 @@ export default function NavItem({
   const pathname = usePathname();
   
   const isPath = !!(pathname === `/${name}`);
-  console.log("🚀 ~ file: NavItem.tsx:4 ~ NavItem ~ pathname:", pathname);
+ 
   return (
     <li>
       <Link

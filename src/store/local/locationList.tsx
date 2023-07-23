@@ -25,7 +25,7 @@ export const locationList = createSlice({
       state.loading = false;
     },
     updateState: (state, action: PayloadAction<Location[]>) => {
-      console.log("payload", action.payload);
+    
       state.data = action.payload;
     },
   },
@@ -33,7 +33,7 @@ export const locationList = createSlice({
     builder.addMatcher(
       getSendStack.endpoints.getDeliveryLocation.matchFulfilled,
       (state, { payload }) => {
-        console.log("🚀 ~ file: locationList.tsx:36 ~ payload:", payload.data)
+        
         state.data = payload.data[0].locals;
         state.loading = false;
       }

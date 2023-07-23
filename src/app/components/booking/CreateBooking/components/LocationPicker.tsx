@@ -24,15 +24,12 @@ export default function LocationDropDown({
 
   useEffect(() => {
     if (locationList.data.length > 0) {
-      console.log(
-        "🚀 ~ file: DropDownMenu.tsx:81 ~ useEffect ~ locationLists:",
-        locationList
-      );
+     
       setLocations(locationList.data);
     }
   }, [locationList]);
   const handleChange = (e: Location) => {
-    console.log("🚀 ~ file: DropDownMenu.tsx:28 ~ handleChange ~ e:", e);
+
     handleLocation(e);
     setSelected(e);
   };

@@ -8,7 +8,7 @@ import Image from "next/image";
 export default function RightSide() {
   useGetBalanceQuery(null);
   const balance = useAppSelector((state)=>state.user.bal)
-  console.log("🚀 ~ file: RightSide.tsx:8 ~ RightSide ~ balance:", balance);
+ 
 
   return (
     <div className="flex items-center gap-2 rsm:hidden">

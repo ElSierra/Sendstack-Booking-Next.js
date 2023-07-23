@@ -1,5 +1,6 @@
 import {
   Balance,
+  CancelDeliveryResponse,
   DeliveryData,
   DeliveryDataResponse,
   DeliveryPrice,
@@ -8,7 +9,6 @@ import {
 } from "@/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
-
 
 export const getSendStack = createApi({
   reducerPath: "userInfo",
@@ -20,7 +20,7 @@ export const getSendStack = createApi({
       if (token) {
         const parsedToken: { appId: string; appSecret: string } =
           JSON.parse(token);
-        console.log("🚀 ~ file: getUserInfo.ts:12 ~ parsedToken:", parsedToken);
+
         headers.set("app_id", parsedToken.appId);
         headers.set("app_secret", parsedToken.appSecret);
       }
@@ -37,8 +37,12 @@ export const getSendStack = createApi({
       query: () => "/locations",
       providesTags: ["location"],
     }),
-    getDeliveries: builder.query<DeliveryResponse, {limit: number, page: number}>({
-      query: (payload) => `/deliveries?limit=${payload.limit}&page=${payload.page}`,
+    getDeliveries: builder.query<
+      DeliveryResponse,
+      { limit: number; page: number }
+    >({
+      query: (payload) =>
+        `/deliveries?limit=${payload.limit}&page=${payload.page}`,
       providesTags: ["deliveries"],
     }),
     getDeliveryPrice: builder.mutation<DeliveryPriceResponse, DeliveryPrice>({
@@ -63,6 +67,20 @@ export const getSendStack = createApi({
       }),
       invalidatesTags: ["balance"],
     }),
+    cancelDelivery: builder.mutation<
+      CancelDeliveryResponse,
+      { trackingId?: string; deliveryId: string }
+    >({
+      query: (payload) => ({
+        url: `/deliveries/${payload.deliveryId}/cancel`,
+        method: "POST",
+        body: {trackingId:payload?.trackingId},
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+      invalidatesTags: ["balance", "deliveries"],
+    }),
   }),
 });
 
@@ -71,5 +89,6 @@ export const {
   useGetDeliveryLocationQuery,
   useGetDeliveryPriceMutation,
   useRequestDeliveryMutation,
+  useCancelDeliveryMutation,
   useGetDeliveriesQuery,
 } = getSendStack;

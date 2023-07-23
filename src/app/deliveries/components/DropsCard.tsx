@@ -14,22 +14,30 @@ import OutlinedButton from "./OutlinedButton";
 import { DropsResponse } from "@/types";
 import { formatMoney } from "@/app/util/numbers";
 
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 import ModalTrack from "./ModalTrack";
 import { openModalTrack } from "@/store/local/modalTrack";
-import { useRouter } from "next/navigation";
 import DriverStatus from "./DriverStatus";
+import CancelModal from "./CancelModal";
+import { openModalCancel } from "@/store/local/modalCancel";
+import { useState } from "react";
 
 export default function DropsCard({
   drops,
   id,
+  delivId,
 }: {
   drops: DropsResponse;
   id: number;
+  delivId: string;
 }) {
   const dispatch = useAppDispatch();
-  const router = useRouter();
+  const status = drops?.status;
+  const cancelList = useAppSelector((state) => state.cancelList.id);
+  const filteredCancel = cancelList.includes(drops.trackingId);
+  console.log("🚀 ~ file: DropsCard.tsx:39 ~ filteredCancel:", cancelList);
+  console.log("🚀 ~ file: DropsCard.tsx:39 ~ filteredCancel:", filteredCancel);
   return (
     <>
       {/* <ModalTime/> */}
@@ -37,6 +45,7 @@ export default function DropsCard({
         estimatedPickupTime={drops.estimatedPickupWindow}
         estimatedDropOffTime={drops.estimatedDropoffWindow}
       />
+      <CancelModal delivId={delivId} />
       <div className="flex w-full text-sm items-center mb-2">
         <div className="flex min-w-[50px] h-28 bg-slate-900 rounded text-white text-6xl justify-center items-center">
           {id + 1}
@@ -55,6 +64,7 @@ export default function DropsCard({
 
               <div className="">
                 <OutlinedButton
+                  props={{ disabled: status === "CANCELLED" }}
                   className="min-w-fit dp:hidden"
                   onClick={() => {
                     dispatch(openModalTrack());
@@ -67,6 +77,7 @@ export default function DropsCard({
                   }
                 </OutlinedButton>
                 <OutlinedButton
+                  props={{ disabled: status === "CANCELLED" || filteredCancel }}
                   className="min-w-fit rsm:hidden"
                   onClick={() => {
                     dispatch(openModalTrack());
@@ -86,15 +97,16 @@ export default function DropsCard({
                 <TextComponents>
                   <span className="flex items-center w-full">
                     <TableDocument size="15" color="#a313e0" variant="Bulk" />
-                    Status: {drops?.status}
+                    Status: {filteredCancel ? "CANCELLED" : status}
                   </span>
                 </TextComponents>
               </div>
               <div className="">
                 <OutlinedButton
                   className="min-w-fit dp:hidden"
+                  props={{ disabled: status === "CANCELLED"|| filteredCancel }}
                   onClick={() => {
-                    dispatch(openModalTrack());
+                    dispatch(openModalCancel(drops?.trackingId));
                   }}
                 >
                   {
@@ -104,9 +116,10 @@ export default function DropsCard({
                   }
                 </OutlinedButton>
                 <OutlinedButton
+                  props={{ disabled: status === "CANCELLED" || filteredCancel }}
                   className="w-[80px] rsm:hidden"
                   onClick={() => {
-                    dispatch(openModalTrack());
+                    dispatch(openModalCancel(drops?.trackingId));
                   }}
                 >
                   {
@@ -141,11 +154,13 @@ export default function DropsCard({
               </div>
             </div>
           </div>
-          <div className="flex flex-col p-2 border-2 border-dotted ml-2 rounded-md">
+          {status !== "CANCELLED" && (
+            <div className="flex flex-col p-2 border-2 border-dotted ml-2 rounded-md">
               <div className="min-w-[50%] ">
-              <DriverStatus statusTimeStamps = {drops.statusTimestamps} />
+                <DriverStatus statusTimeStamps={drops.statusTimestamps} />
               </div>
             </div>
+          )}
           {drops?.assignedTo && (
             <div className="flex flex-col p-2 border-2 border-dotted ml-2 rounded-md">
               <div className="min-w-[50%] ">

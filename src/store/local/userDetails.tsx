@@ -11,7 +11,7 @@ const user = createSlice({
     builder.addMatcher(
       getSendStack.endpoints.getBalance.matchFulfilled,
       (state, { payload }) => {
-        console.log("🚀 ~ file: locationList.tsx:36 ~ payload:", payload.data);
+       
         state.bal = payload.data.balance;
       }
     );

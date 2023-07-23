@@ -220,3 +220,8 @@ export type estimatedTime = {
   start: string;
   end: string;
 };
+export type CancelDeliveryResponse = {
+  status: boolean;
+  message: string;
+  data: {};
+};
